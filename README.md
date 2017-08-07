@@ -2,7 +2,7 @@
 <img src="http://i.imgur.com/mCtrbIN.png">
 </p>
 ===================
-
+WARNING! NOT ALL STRING ENCRYPTED!
 
 # Please Note that AimTux-Fuzion Requires Additional Packages. See Below!
 [![Join the chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
