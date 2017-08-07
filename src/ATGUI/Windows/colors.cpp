@@ -4,23 +4,8 @@ bool Colors::showWindow = false;
 
 void Colors::RenderWindow()
 {
-	if( Settings::UI::Windows::Colors::reload )
-	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Colors::posX, Settings::UI::Windows::Colors::posY), ImGuiSetCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Colors::sizeX, Settings::UI::Windows::Colors::sizeY), ImGuiSetCond_Always);
-		Settings::UI::Windows::Colors::reload = false;
-		Colors::showWindow = Settings::UI::Windows::Colors::open;
-	}
-	else
-	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Colors::posX, Settings::UI::Windows::Colors::posY), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Colors::sizeX, Settings::UI::Windows::Colors::sizeY), ImGuiSetCond_FirstUseEver);
-	}
 	if (!Colors::showWindow)
-	{
-		Settings::UI::Windows::Colors::open = false;
 		return;
-	}
 
 	struct ColorListVar
 	{
@@ -55,7 +40,7 @@ void Colors::RenderWindow()
 			{ "UI Main", &Settings::UI::mainColor },
 			{ "UI Body", &Settings::UI::bodyColor },
 			{ "UI Font", &Settings::UI::fontColor },
-			{ "UI Accent", &Settings::UI::accentColor },
+			{ "Watermark", &Settings::Watermark::color },
 			{ "FOV Circle", &Settings::ESP::FOVCrosshair::color },
 			{ "Spread", &Settings::ESP::Spread::color },
 			{ "SpreadLimit", &Settings::ESP::Spread::spreadLimitColor},
@@ -123,15 +108,9 @@ void Colors::RenderWindow()
 
 	static int colorSelected = 0;
 
+	ImGui::SetNextWindowSize(ImVec2(540, 325), ImGuiSetCond_Always);
 	if (ImGui::Begin("Colors", &Colors::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize))
 	{
-		Settings::UI::Windows::Colors::open = true;
-		ImVec2 temp = ImGui::GetWindowSize();
-		Settings::UI::Windows::Colors::sizeX = (int)temp.x;
-		Settings::UI::Windows::Colors::sizeY = (int)temp.y;
-		temp = ImGui::GetWindowPos();
-		Settings::UI::Windows::Colors::posX = (int)temp.x;
-		Settings::UI::Windows::Colors::posY = (int)temp.y;
 		ImGui::Columns(2, NULL, true);
 		{
 			ImGui::PushItemWidth(-1);
@@ -144,8 +123,10 @@ void Colors::RenderWindow()
 			{
 				UI::ColorPicker4((float*)colors[colorSelected].healthColorVarPtr);
 				ImGui::Checkbox("Rainbow", &colors[colorSelected].healthColorVarPtr->rainbow);
+				SetTooltip("Makes the color an animated rainbow.");
 				ImGui::SameLine();
 				ImGui::Checkbox("Health-Based", &colors[colorSelected].healthColorVarPtr->hp);
+				SetTooltip("Takes color from entity health, i.e. 100 - green, 50 - yellow.");
 				ImGui::PushItemWidth(-1);
 				ImGui::SliderFloat("##RAINBOWSPEED", &colors[colorSelected].healthColorVarPtr->rainbowSpeed, 0.f, 1.f, "Rainbow Speed: %0.3f");
 				ImGui::PopItemWidth();
@@ -154,6 +135,7 @@ void Colors::RenderWindow()
 			{
 				UI::ColorPicker4((float*)colors[colorSelected].colorVarPtr);
 				ImGui::Checkbox("Rainbow", &colors[colorSelected].colorVarPtr->rainbow);
+				SetTooltip("Makes the color an animated rainbow.");
 				ImGui::PushItemWidth(-1);
 				ImGui::SliderFloat("##RAINBOWSPEED", &colors[colorSelected].colorVarPtr->rainbowSpeed, 0.f, 1.f, "Rainbow Speed: %0.3f");
 				ImGui::PopItemWidth();

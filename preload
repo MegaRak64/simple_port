@@ -4,7 +4,7 @@ LIBNAME=$(cat "$(pwd)"/build_id)
 # An optimized way to find the CS:GO directory without specifying any absolute nor relative paths.
 # This ensures the find command will not hang, even with a lot of symlinks in $HOME.
 # There can be crash dumps in /var/lib with the same name.
-GAMEROOT=$(dirname "$(find -L -O3 . "$HOME" -maxdepth 6 -type f -iname csgo_linux64 2>/dev/null | head -n 1)")
+GAMEROOT=$(dirname "$(find -L -O3 . "/media/ROSTIK/Rostik/SteamLibrary/steamapps/common/" -maxdepth 6 -type f -iname csgo_linux64 2>/dev/null | head -n 1)")
 
 export LD_LIBRARY_PATH="$GAMEROOT"\
 ":$GAMEROOT/bin"\
@@ -77,9 +77,9 @@ while [ $STATUS -eq 42 ]; do
             optirun ${DEBUGGER} "${GAMEROOT}"/${GAMEEXE} "$@"
         else
             echo -e "Launching CS:GO... \\e[1;32m[SUCCESS]\\e[0m"
-            ${DEBUGGER} "${GAMEROOT}"/${GAMEEXE} -x "$ARGSFILE"
+            "${GAMEROOT}"/${GAMEEXE} -x "$ARGSFILE"
             rm "$ARGSFILE"
-            ${DEBUGGER} "${GAMEROOT}"/${GAMEEXE} "$@"
+            "${GAMEROOT}"/${GAMEEXE} "$@"
         fi
     elif [ "${DEBUGGER}" == "lldb" ]; then
         ARGSFILE=$(mktemp "$USER".hl2.lldb.XXXX)

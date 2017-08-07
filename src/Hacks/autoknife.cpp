@@ -19,47 +19,23 @@ bool AutoKnife::IsPlayerBehind(C_BasePlayer* localplayer, C_BasePlayer* player)
 int AutoKnife::GetKnifeDamageDone(C_BasePlayer* localplayer, C_BasePlayer* player)
 {
 	//damage: unarmored/armored
-	//leftclick: 39/33
-	//rightclick: 55/65
+	//leftclick: 40/34
 	//backstab leftclick: 90/76
-	//backstab rightclick: 180/153
 	bool backstab = IsPlayerBehind(localplayer, player);
 	int armor = player->GetArmor();
 	if (!backstab)
 	{
 		if (armor>0)
-			return 33; // 21
+			return 34;
 		else
-			return 39; // 25
+			return 40;
 	}
 	else
 	{
 		if (armor>0)
-			return 76; // 76
+			return 76;
 		else
-			return 90; // 90
-	}
-}
-
-int AutoKnife::GetKnife2DamageDone(C_BasePlayer* localplayer, C_BasePlayer* player)
-{
-	//damage: unarmored/armored
-	//leftclick: 39/33
-	//rightclick: 55/65
-	//backstab leftclick: 90/76
-	//backstab rightclick: 180/153
-	bool backstab = IsPlayerBehind(localplayer, player);
-	int armor = player->GetArmor();
-	if (!backstab)
-	{
-		if (armor>0)
-			return 55;
-		else
-			return 65;
-	}
-	else
-	{
-		return 100;
+			return 90;
 	}
 }
 
@@ -136,21 +112,10 @@ void AutoKnife::CreateMove(CUserCmd *cmd)
 		}
 		else
 		{
-			if (playerDistance <= 65.f && GetKnife2DamageDone(localplayer, player) >= player->GetHealth())
-				cmd->buttons |= IN_ATTACK2;
-			else if (IsPlayerBehind(localplayer, player) && playerDistance <= 65.f)
+			if (playerDistance <= 67.f && GetKnifeDamageDone(localplayer, player) < player->GetHealth())
 				cmd->buttons |= IN_ATTACK2;
 			else if (playerDistance <= 78.f)
-			{
-				if (IsPlayerBehind(localplayer, player))
-					return;
-
-				if (playerDistance <= 65.f &&
-					(2*(GetKnifeDamageDone(localplayer, player)) + GetKnife2DamageDone(localplayer, player) - 13) < player->GetHealth())
-					cmd->buttons |= IN_ATTACK2;
-				else
-					cmd->buttons |= IN_ATTACK;
-			}
+				cmd->buttons |= IN_ATTACK;
 		}
 	}
 }

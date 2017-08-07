@@ -15,6 +15,9 @@ void AutoDefuse::CreateMove(CUserCmd *cmd)
 	if (localplayer->GetTeam() != TeamID::TEAM_COUNTER_TERRORIST)
 		return;
 
+	if (!(*csGameRules) || !(*csGameRules)->IsBombPlanted())
+		return;
+
 	C_PlantedC4* bomb = nullptr;
 
 	for (int i = 1; i < entityList->GetHighestEntityIndex(); i++)

@@ -6,66 +6,44 @@ static char nickname[127] = "";
 
 void PlayerList::RenderWindow()
 {
-	if( Settings::UI::Windows::Playerlist::reload )
-	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Playerlist::posX, Settings::UI::Windows::Playerlist::posY), ImGuiSetCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Playerlist::sizeX, Settings::UI::Windows::Playerlist::sizeY), ImGuiSetCond_Always);
-		Settings::UI::Windows::Playerlist::reload = false;
-		PlayerList::showWindow = Settings::UI::Windows::Playerlist::open;
-	}
-	else
-	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Playerlist::posX, Settings::UI::Windows::Playerlist::posY), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Playerlist::sizeX, Settings::UI::Windows::Playerlist::sizeY), ImGuiSetCond_FirstUseEver);
-	}
 	if (!PlayerList::showWindow)
-	{
-		Settings::UI::Windows::Playerlist::open = false;
 		return;
-	}
 
-	if (ImGui::Begin(XORSTR("Player list"), &PlayerList::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
+	ImGui::SetNextWindowSize(ImVec2(700, 500), ImGuiSetCond_FirstUseEver);
+	if (ImGui::Begin("Player list", &PlayerList::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
 	{
-		Settings::UI::Windows::Playerlist::open = true;
-		ImVec2 temp = ImGui::GetWindowSize();
-		Settings::UI::Windows::Playerlist::sizeX = (int)temp.x;
-		Settings::UI::Windows::Playerlist::sizeY = (int)temp.y;
-		temp = ImGui::GetWindowPos();
-		Settings::UI::Windows::Playerlist::posX = (int)temp.x;
-		Settings::UI::Windows::Playerlist::posY = (int)temp.y;
-
 		static int currentPlayer = -1;
 
 		if (!engine->IsInGame() || (*csPlayerResource && !(*csPlayerResource)->GetConnected(currentPlayer)))
 			currentPlayer = -1;
 
-		ImGui::ListBoxHeader(XORSTR("##PLAYERS"), ImVec2(-1, (ImGui::GetWindowSize().y - 95)));
+		ImGui::ListBoxHeader("##PLAYERS", ImVec2(-1, (ImGui::GetWindowSize().y - 95)));
 		if (engine->IsInGame() && *csPlayerResource)
 		{
 			ImGui::Columns(8);
 
-			ImGui::Text(XORSTR("ID"));
+			ImGui::Text("ID");
 			ImGui::NextColumn();
 
-			ImGui::Text(XORSTR("Nickname"));
+			ImGui::Text("Nickname");
 			ImGui::NextColumn();
 
-			ImGui::Text(XORSTR("Team"));
+			ImGui::Text("SteamID");
 			ImGui::NextColumn();
 
-			ImGui::Text(XORSTR("SteamID"));
+			ImGui::Text("Team");
 			ImGui::NextColumn();
 
-			ImGui::Text(XORSTR("Clan tag"));
+			ImGui::Text("Clan tag");
 			ImGui::NextColumn();
 
-			ImGui::Text(XORSTR("Stats"));
+			ImGui::Text("Stats");
 			ImGui::NextColumn();
 
-			ImGui::Text(XORSTR("Rank"));
+			ImGui::Text("Rank");
 			ImGui::NextColumn();
 
-			ImGui::Text(XORSTR("Wins"));
+			ImGui::Text("Wins");
 			ImGui::NextColumn();
 
 			std::unordered_map<TeamID, std::vector<int>, Util::IntHash<TeamID>> players = {
@@ -92,16 +70,16 @@ void PlayerList::RenderWindow()
 				switch ((TeamID) team)
 				{
 					case TeamID::TEAM_UNASSIGNED:
-						teamName = strdup(XORSTR("Unassigned"));
+						teamName = strdup("Unassigned");
 						break;
 					case TeamID::TEAM_SPECTATOR:
-						teamName = strdup(XORSTR("Spectator"));
+						teamName = strdup("Spectator");
 						break;
 					case TeamID::TEAM_TERRORIST:
-						teamName = strdup(XORSTR("Terrorist"));
+						teamName = strdup("Terrorist");
 						break;
 					case TeamID::TEAM_COUNTER_TERRORIST:
-						teamName = strdup(XORSTR("Counter Terrorist"));
+						teamName = strdup("Counter Terrorist");
 						break;
 				}
 
@@ -132,7 +110,7 @@ void PlayerList::RenderWindow()
 
 					ImGui::Text("%s", (*csPlayerResource)->GetClan(it));
 					ImGui::NextColumn();
-
+					
 					ImGui::Text("%d/%d/%d", (*csPlayerResource)->GetKills(it),(*csPlayerResource)->GetAssists(it), (*csPlayerResource)->GetDeaths(it));
 					ImGui::NextColumn();
 
@@ -154,7 +132,7 @@ void PlayerList::RenderWindow()
 			ImGui::Columns(3);
 			{
 				bool isFriendly = std::find(Aimbot::friends.begin(), Aimbot::friends.end(), entityInformation.xuid) != Aimbot::friends.end();
-				if (ImGui::Checkbox(XORSTR("Friend"), &isFriendly))
+				if (ImGui::Checkbox("Friend", &isFriendly))
 				{
 					if (isFriendly)
 						Aimbot::friends.push_back(entityInformation.xuid);
@@ -163,7 +141,7 @@ void PlayerList::RenderWindow()
 				}
 
 				bool shouldResolve = std::find(Resolver::Players.begin(), Resolver::Players.end(), entityInformation.xuid) != Resolver::Players.end();
-				if (ImGui::Checkbox(XORSTR("Resolver"), &shouldResolve))
+				if (ImGui::Checkbox("Resolver", &shouldResolve))
 				{
 					if (shouldResolve)
 						Resolver::Players.push_back(entityInformation.xuid);
@@ -173,7 +151,7 @@ void PlayerList::RenderWindow()
 			}
 			ImGui::NextColumn();
 			{
-				if (ImGui::Button(XORSTR("Steal name")))
+				if (ImGui::Button("Steal name"))
 				{
 					std::string name(entityInformation.name);
 					name = Util::PadStringRight(name, name.length() + 1);
@@ -183,7 +161,7 @@ void PlayerList::RenderWindow()
 				}
 
 				const char* clanTag = (*csPlayerResource)->GetClan(currentPlayer);
-				if (strlen(clanTag) > 0 && ImGui::Button(XORSTR("Steal clan tag")))
+				if (strlen(clanTag) > 0 && ImGui::Button("Steal clan tag"))
 				{
 					Settings::ClanTagChanger::enabled = true;
 					strcpy(Settings::ClanTagChanger::value, clanTag);
@@ -194,9 +172,9 @@ void PlayerList::RenderWindow()
 			}
 			ImGui::NextColumn();
 			{
-				if (ImGui::Button(XORSTR("Print information")))
+				if (ImGui::Button("Print information"))
 				{
-					cvar->ConsoleColorPrintf(ColorRGBA(255, 255, 255), XORSTR("\n=====\nPlayer informations:\n[%s] %s \nSteamID: %s\n=====\n"),(*csPlayerResource)->GetClan(currentPlayer), entityInformation.name, entityInformation.guid);
+					cvar->ConsoleColorPrintf(ColorRGBA(255, 255, 255), "\n=====\nPlayer informations:\n[%s] %s \nSteamID: %s\n=====\n",(*csPlayerResource)->GetClan(currentPlayer), entityInformation.name, entityInformation.guid);
 				}
 			}
 		}

@@ -41,12 +41,12 @@ namespace Hooker
 	void FindLineGoesThroughSmoke();
 	void FindInitKeyValues();
 	void FindLoadFromBuffer();
-	//void FindVstdlibFunctions();
+	void FindVstdlibFunctions();
 	void FindOverridePostProcessingDisable();
 	void FindCrosshairWeaponTypeCheck();
 	void FindCamThinkSvCheatsCheck();
 	void HookSwapWindow();
 	void HookPollEvent();
 	void FindSDLInput();
-	void FindSetNamedSkybox();
+	void FindLoadSky();
 }

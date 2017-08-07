@@ -1,5 +1,5 @@
 #include "autowall.h"
-static float GetHitgroupDamageMultiplier(HitGroups iHitGroup)
+float Autowall::GetHitgroupDamageMultiplier(HitGroups iHitGroup)
 {
 	switch (iHitGroup)
 	{
@@ -19,9 +19,9 @@ static float GetHitgroupDamageMultiplier(HitGroups iHitGroup)
 	}
 }
 
-static void ScaleDamage(HitGroups hitgroup, C_BasePlayer* enemy, float weapon_armor_ratio, float& current_damage)
+void Autowall::ScaleDamage(HitGroups hitgroup, C_BasePlayer* enemy, float weapon_armor_ratio, float& current_damage)
 {
-	current_damage *= GetHitgroupDamageMultiplier(hitgroup);
+	current_damage *= Autowall::GetHitgroupDamageMultiplier(hitgroup);
 
 	if (enemy->GetArmor() > 0)
 	{
@@ -35,7 +35,7 @@ static void ScaleDamage(HitGroups hitgroup, C_BasePlayer* enemy, float weapon_ar
 	}
 }
 
-static bool TraceToExit(Vector& end, trace_t* enter_trace, Vector start, Vector dir, trace_t* exit_trace)
+bool Autowall::TraceToExit(Vector& end, trace_t* enter_trace, Vector start, Vector dir, trace_t* exit_trace)
 {
 	float distance = 0.0f;
 
@@ -99,7 +99,7 @@ static bool TraceToExit(Vector& end, trace_t* enter_trace, Vector start, Vector 
 	return false;
 }
 
-static bool HandleBulletPenetration(CCSWeaponInfo* weaponInfo, Autowall::FireBulletData& data)
+bool Autowall::HandleBulletPenetration(CCSWeaponInfo* weaponInfo, FireBulletData& data)
 {
 	surfacedata_t *enter_surface_data = physics->GetSurfaceData(data.enter_trace.surface.surfaceProps);
 	int enter_material = enter_surface_data->game.material;
@@ -169,7 +169,7 @@ static bool HandleBulletPenetration(CCSWeaponInfo* weaponInfo, Autowall::FireBul
 	return true;
 }
 
-static void TraceLine(Vector vecAbsStart, Vector vecAbsEnd, unsigned int mask, C_BasePlayer* ignore, trace_t* ptr)
+void TraceLine(Vector vecAbsStart, Vector vecAbsEnd, unsigned int mask, C_BasePlayer* ignore, trace_t* ptr)
 {
 	Ray_t ray;
 	ray.Init(vecAbsStart, vecAbsEnd);
@@ -179,7 +179,7 @@ static void TraceLine(Vector vecAbsStart, Vector vecAbsEnd, unsigned int mask, C
 	trace->TraceRay(ray, mask, &filter, ptr);
 }
 
-static bool SimulateFireBullet(C_BaseCombatWeapon* pWeapon, bool teamCheck, Autowall::FireBulletData& data)
+bool Autowall::SimulateFireBullet(C_BaseCombatWeapon* pWeapon, bool teamCheck, FireBulletData& data)
 {
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	CCSWeaponInfo* weaponInfo = pWeapon->GetCSWpnData();
@@ -195,12 +195,6 @@ static bool SimulateFireBullet(C_BaseCombatWeapon* pWeapon, bool teamCheck, Auto
 		Vector end = data.src + data.direction * data.trace_length_remaining;
 
 		// data.enter_trace
-		TraceLine(data.src, end, MASK_SHOT, localplayer, &data.enter_trace);
-
-		Ray_t ray;
-		ray.Init(data.src, end + data.direction * 40.f);
-
-		trace->TraceRay(ray, MASK_SHOT, &data.filter, &data.enter_trace);
 
 		TraceLine(data.src, end + data.direction * 40.f, MASK_SHOT, localplayer, &data.enter_trace);
 

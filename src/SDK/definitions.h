@@ -24,6 +24,7 @@ typedef void* (*CreateInterfaceFn) (const char*, int*);
 typedef IClientMode* (*GetClientModeFn) (void);
 typedef CGlowObjectManager* (*GlowObjectManagerFn) (void);
 typedef bool (*MsgFunc_ServerRankRevealAllFn) (float*);
+typedef void (*LoadSkyFn) (const char*);
 typedef void (*SendClanTagFn) (const char*, const char*);
 typedef void (*IsReadyCallbackFn) (void*);
 typedef ILauncherMgr* (*ILauncherMgrCreateFn) (void);
@@ -34,11 +35,11 @@ typedef bool (*LineGoesThroughSmokeFn) (Vector, Vector, int16_t);
 typedef void (*InitKeyValuesFn) (KeyValues*, const char*);
 typedef void (*LoadFromBufferFn) (KeyValues*, const char*, const char*, void*, const char*, void*);
 typedef ICommandLine* (*CommandLineFn) (void);
-//typedef void (*RandomSeedFn)(int);
-//typedef float (*RandomFloatFn)(float, float);
-//typedef float (*RandomFloatExpFn)(float, float, float);
-//typedef int (*RandomIntFn)(int, int);
-//typedef float (*RandomGaussianFloatFn)(float, float);
+typedef void (*RandomSeedFn)(int);
+typedef float (*RandomFloatFn)(float, float);
+typedef float (*RandomFloatExpFn)(float, float, float);
+typedef int (*RandomIntFn)(int, int);
+typedef float (*RandomGaussianFloatFn)(float, float);
 typedef bool (*SetNamedSkyBoxFn)(const char*);
 
 enum class TeamID : int

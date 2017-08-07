@@ -2,6 +2,7 @@
 
 #include <set>
 #include "../settings.h"
+#include "../SDK/SDK.h"
 #include "../interfaces.h"
 
 namespace Radar
@@ -13,9 +14,8 @@ namespace Radar
 		SHAPE_TRIANGLE,
 		SHAPE_TRIANGLE_UPSIDEDOWN
 	};
-
+	ImColor GetRadarPlayerColor(C_BasePlayer* player, bool visible);
 	void RenderWindow();
-
-	//Hooks
+	void InGameRadar(C_BasePlayer* player);
 	void BeginFrame();
 };

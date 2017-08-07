@@ -4,7 +4,9 @@
 #include "../SDK/SDK.h"
 #include "../interfaces.h"
 
-namespace Dlights
+namespace Skychanger
 {
-	void Paint();
+	void SetSky(const char* skyname);	
 }
+
+extern LoadSkyFn LoadSky;

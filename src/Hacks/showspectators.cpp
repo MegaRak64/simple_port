@@ -48,33 +48,17 @@ void ShowSpectators::RenderWindow()
 
 	if (!UI::isVisible && !engine->IsInGame())
 		return;
-	if( Settings::UI::Windows::Spectators::reload )
-	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Spectators::posX, Settings::UI::Windows::Spectators::posY), ImGuiSetCond_Always);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Spectators::sizeX, Settings::UI::Windows::Spectators::sizeY), ImGuiSetCond_Always);
-		Settings::UI::Windows::Spectators::reload = false;
-	}
-	else
-	{
-		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Spectators::posX, Settings::UI::Windows::Spectators::posY), ImGuiSetCond_FirstUseEver);
-		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Spectators::sizeX, Settings::UI::Windows::Spectators::sizeY), ImGuiSetCond_FirstUseEver);
-	}
-	if (ImGui::Begin(XORSTR("Spectators"), &Settings::ShowSpectators::enabled, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
-	{
-		ImVec2 temp = ImGui::GetWindowSize();
-		Settings::UI::Windows::Spectators::sizeX = (int)temp.x;
-		Settings::UI::Windows::Spectators::sizeY = (int)temp.y;
-		temp = ImGui::GetWindowPos();
-		Settings::UI::Windows::Spectators::posX = (int)temp.x;
-		Settings::UI::Windows::Spectators::posY = (int)temp.y;
 
+	ImGui::SetNextWindowSize(ImVec2(50, 100), ImGuiSetCond_FirstUseEver);
+	if (ImGui::Begin("Spectators", &Settings::ShowSpectators::enabled, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
+	{
 		ImGui::Columns(2);
 		ImGui::Separator();
 
-		ImGui::Text(XORSTR("Name"));
+		ImGui::Text("Name");
 		ImGui::NextColumn();
 
-		ImGui::Text(XORSTR("Mode"));
+		ImGui::Text("Mode");
 		ImGui::NextColumn();
 
 		for (int playerId : ShowSpectators::GetObservervators(engine->GetLocalPlayer()))
@@ -98,22 +82,22 @@ void ShowSpectators::RenderWindow()
 			switch (*player->GetObserverMode())
 			{
 				case ObserverMode_t::OBS_MODE_IN_EYE:
-					ImGui::Text(XORSTR("Perspective"));
+					ImGui::Text("Perspective");
 					break;
 				case ObserverMode_t::OBS_MODE_CHASE:
-					ImGui::Text(XORSTR("3rd person"));
+					ImGui::Text("3rd person");
 					break;
 				case ObserverMode_t::OBS_MODE_ROAMING:
-					ImGui::Text(XORSTR("Free look"));
+					ImGui::Text("Free look");
 					break;
 				case ObserverMode_t::OBS_MODE_DEATHCAM:
-					ImGui::Text(XORSTR("Deathcam"));
+					ImGui::Text("Deathcam");
 					break;
 				case ObserverMode_t::OBS_MODE_FREEZECAM:
-					ImGui::Text(XORSTR("Freezecam"));
+					ImGui::Text("Freezecam");
 					break;
 				case ObserverMode_t::OBS_MODE_FIXED:
-					ImGui::Text(XORSTR("Fixed"));
+					ImGui::Text("Fixed");
 					break;
 				default:
 					break;

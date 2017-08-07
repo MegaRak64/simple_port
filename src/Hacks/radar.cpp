@@ -11,21 +11,22 @@ bool Settings::Radar::visibilityCheck = false;
 bool Settings::Radar::smokeCheck = false;
 bool Settings::Radar::InGame::enabled = false;
 TeamColorType Settings::Radar::teamColorType = TeamColorType::RELATIVE;
-HealthColorVar Settings::Radar::enemyColor = ImColor(255, 0, 0, 255);
-HealthColorVar Settings::Radar::enemyVisibleColor = ImColor(255, 255, 0, 255);
-HealthColorVar Settings::Radar::allyColor = ImColor(0, 0, 255, 255);
-HealthColorVar Settings::Radar::allyVisibleColor = ImColor(0, 255, 0, 255);
-HealthColorVar Settings::Radar::tColor = ImColor(255, 0, 0, 255);
-HealthColorVar Settings::Radar::tVisibleColor = ImColor(255, 255, 0, 255);
-HealthColorVar Settings::Radar::ctColor = ImColor(0, 0, 255, 255);
-HealthColorVar Settings::Radar::ctVisibleColor = ImColor(0, 255, 0, 255);
-ColorVar Settings::Radar::bombColor = ImColor(156, 39, 176, 255);
-ColorVar Settings::Radar::bombDefusingColor = ImColor(213, 0, 249, 255);
-ColorVar Settings::Radar::defuserColor = ImColor(49, 27, 146, 255);
+HealthColorVar Settings::Radar::enemyColor = ImColor(192, 32, 32, 255);
+HealthColorVar Settings::Radar::enemyVisibleColor = ImColor(192, 32, 32, 255);
+HealthColorVar Settings::Radar::allyColor = ImColor(32, 64, 192, 255);
+HealthColorVar Settings::Radar::allyVisibleColor = ImColor(32, 64, 192, 255);
+HealthColorVar Settings::Radar::tColor = ImColor(192, 128, 64, 255);
+HealthColorVar Settings::Radar::tVisibleColor = ImColor(192, 128, 64, 255);
+HealthColorVar Settings::Radar::ctColor = ImColor(64, 128, 192, 255);
+HealthColorVar Settings::Radar::ctVisibleColor = ImColor(64, 128, 192, 255);
+ColorVar Settings::Radar::bombColor = ImColor(192, 192, 64, 255);
+ColorVar Settings::Radar::bombDefusingColor = ImColor(192, 192, 64, 255);
+ColorVar Settings::Radar::defuserColor = ImColor(32, 192, 192, 255);
 float Settings::Radar::iconsScale = 4.5f;
 
 std::set<int> visible_players;
-static Vector2D WorldToRadar(const Vector location, const Vector origin, const QAngle angles, int width, float scale = 16.f)
+
+Vector2D WorldToRadar(const Vector location, const Vector origin, const QAngle angles, int width, float scale = 16.f)
 {
 	float x_diff = location.x - origin.x;
 	float y_diff = location.y - origin.y;
@@ -74,11 +75,13 @@ static Vector2D WorldToRadar(const Vector location, const Vector origin, const Q
 
 	return Vector2D(xnew_diff, ynew_diff);
 }
+
 static void SquareConstraint(ImGuiSizeConstraintCallbackData *data)
 {
 	data->DesiredSize = ImVec2(std::max(data->DesiredSize.x, data->DesiredSize.y), std::max(data->DesiredSize.x, data->DesiredSize.y));
 }
-static ImColor GetRadarPlayerColor(C_BasePlayer* player, bool visible)
+
+ImColor Radar::GetRadarPlayerColor(C_BasePlayer* player, bool visible)
 {
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer)
@@ -302,14 +305,14 @@ void Radar::RenderWindow()
 		ImGui::End();
 	}
 }
-static void InGameRadar(C_BasePlayer* player)
+
+void Radar::InGameRadar(C_BasePlayer* player)
 {
 	if (!player->GetAlive() || player->GetDormant())
 		return;
 
 	*player->GetSpotted() = true;
 }
-
 
 void Radar::BeginFrame()
 {
@@ -335,7 +338,7 @@ void Radar::BeginFrame()
 		C_BasePlayer* player = (C_BasePlayer*) entity;
 
 		if (Settings::Radar::InGame::enabled)
-			InGameRadar(player);
+			Radar::InGameRadar(player);
 
 		if (!Settings::Radar::enabled)
 			continue;

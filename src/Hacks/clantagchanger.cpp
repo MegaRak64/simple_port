@@ -6,29 +6,7 @@ int Settings::ClanTagChanger::animationSpeed = 650;
 bool Settings::ClanTagChanger::enabled = false; // TODO find a way to go back to the "official" clan tag for the player? -- Save the current clan tag, before editing, then restore it later
 ClanTagType Settings::ClanTagChanger::type = ClanTagType::STATIC;
 
-static std::vector<std::wstring> splitWords(std::wstring text)
-{
-	std::wistringstream stream(text);
-	std::wstring word;
-	std::vector<std::wstring> words;
-	while (stream >> word)
-		words.push_back(word);
-
-	return words;
-}
-static ClanTagChanger::Animation Letters(std::string name, std::wstring text)
-{
-	// Outputs a letter incrementing animation
-	std::vector<ClanTagChanger::Frame> frames;
-	for (unsigned long i = 1; i <= text.length(); i++)
-		frames.push_back(ClanTagChanger::Frame(text.substr(0, i), Settings::ClanTagChanger::animationSpeed));
-
-	for (unsigned long i = text.length() - 2; i > 0; i--)
-		frames.push_back(ClanTagChanger::Frame(frames[i].text, Settings::ClanTagChanger::animationSpeed));
-
-	return ClanTagChanger::Animation(name, frames, ClanTagChanger::ANIM_LOOP);
-}
-static ClanTagChanger::Animation Marquee(std::string name, std::wstring text, int width = 15)
+ClanTagChanger::Animation ClanTagChanger::Marquee(std::string name, std::wstring text, int width /*= 15*/)
 {
 	text.erase(std::remove(text.begin(), text.end(), '\0'), text.end());
 
@@ -40,23 +18,49 @@ static ClanTagChanger::Animation Marquee(std::string name, std::wstring text, in
 
 	return ClanTagChanger::Animation(name, frames, ClanTagChanger::ANIM_LOOP);
 }
-static ClanTagChanger::Animation Words(std::string name, std::wstring text)
+
+std::vector<std::wstring> splitWords(std::wstring text)
+{
+	std::wistringstream stream(text);
+	std::wstring word;
+	std::vector<std::wstring> words;
+	while (stream >> word)
+		words.push_back(word);
+
+	return words;
+}
+
+ClanTagChanger::Animation ClanTagChanger::Words(std::string name, std::wstring text)
 {
 	// Outputs a word by word animation
 	std::vector<std::wstring> words = splitWords(text);
 	std::vector<ClanTagChanger::Frame> frames;
 	for (unsigned long i = 0; i < words.size(); i++)
-		frames.push_back(ClanTagChanger::Frame(words[i], Settings::ClanTagChanger::animationSpeed));
+		frames.push_back(Frame(words[i], Settings::ClanTagChanger::animationSpeed));
+
+	return ClanTagChanger::Animation(name, frames, ClanTagChanger::ANIM_LOOP);
+}
+
+ClanTagChanger::Animation ClanTagChanger::Letters(std::string name, std::wstring text)
+{
+	// Outputs a letter incrementing animation
+	std::vector<ClanTagChanger::Frame> frames;
+	for (unsigned long i = 1; i <= text.length(); i++)
+		frames.push_back(Frame(text.substr(0, i), Settings::ClanTagChanger::animationSpeed));
+
+	for (unsigned long i = text.length() - 2; i > 0; i--)
+		frames.push_back(Frame(frames[i].text, Settings::ClanTagChanger::animationSpeed));
 
 	return ClanTagChanger::Animation(name, frames, ClanTagChanger::ANIM_LOOP);
 }
 
 std::vector<ClanTagChanger::Animation> ClanTagChanger::animations = {
-		Marquee("--", L"--"),
-		Words("--", L"--"),
-		Letters("--", L"--")
+	ClanTagChanger::Marquee("NOVAC", L"NO VAC ON LINUX"),
+	ClanTagChanger::Words("USPINME", L"You spin me right round baby right round like a record baby right round _round __round"),
+	ClanTagChanger::Letters("ILOVELINUX", L"Suck my Tux!")
 };
 ClanTagChanger::Animation* ClanTagChanger::animation = &ClanTagChanger::animations[0];
+
 void ClanTagChanger::UpdateClanTagCallback()
 {
 	if (strlen(Settings::ClanTagChanger::value) > 0 && Settings::ClanTagChanger::type > ClanTagType::STATIC)
@@ -66,13 +70,13 @@ void ClanTagChanger::UpdateClanTagCallback()
 		switch (Settings::ClanTagChanger::type)
 		{
 			case ClanTagType::MARQUEE:
-				*ClanTagChanger::animation = Marquee("------", wc);
+				*ClanTagChanger::animation = ClanTagChanger::Marquee("CUSTOM", wc);
 				break;
 			case ClanTagType::WORDS:
-				*ClanTagChanger::animation = Words("------", wc);
+				*ClanTagChanger::animation = ClanTagChanger::Words("CUSTOM", wc);
 				break;
 			case ClanTagType::LETTERS:
-				*ClanTagChanger::animation = Letters("------", wc);
+				*ClanTagChanger::animation = ClanTagChanger::Letters("CUSTOM", wc);
 				break;
 			default:
 				break;
@@ -82,15 +86,16 @@ void ClanTagChanger::UpdateClanTagCallback()
 	}
 
 	ClanTagChanger::animations = {
-			Marquee("--", L"--"),
-			Words("--", L"--"),
-			Letters("--", L"--")
+			ClanTagChanger::Marquee("NOVAC", L"NO VAC ON LINUX"),
+			ClanTagChanger::Words("USPINME", L"You spin me right round baby right round like a record baby right round _round __round"),
+			ClanTagChanger::Letters("ILOVELINUX", L"Suck my Tux!")
 	};
 
 	int current_animation = (int) Settings::ClanTagChanger::type - 1;
 	if (current_animation >= 0)
 		ClanTagChanger::animation = &ClanTagChanger::animations[current_animation];
 }
+
 void ClanTagChanger::BeginFrame(float frameTime)
 {
 	if (!Settings::ClanTagChanger::enabled)

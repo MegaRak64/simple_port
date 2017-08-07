@@ -5,7 +5,7 @@ void UI::KeyBindButton(ButtonCode_t* key)
 	const char* text = inputSystem->ButtonCodeToString(*key);
 
 	if (SetKeyCodeState::shouldListen && SetKeyCodeState::keyOutput == key)
-		text = XORSTR("-- press a key --");
+		text = "-- press a key --";
 	else
 		text = Util::ToUpper(std::string(text)).c_str();
 
@@ -114,7 +114,7 @@ bool UI::ColorPicker(float* col, bool alphabar)
 	draw_list->AddLine(ImVec2(p.x, p.y + CROSSHAIR_SIZE), ImVec2(p.x, p.y + 2), ImColor(255, 255, 255));
 	draw_list->AddLine(ImVec2(p.x, p.y - CROSSHAIR_SIZE), ImVec2(p.x, p.y - 2), ImColor(255, 255, 255));
 
-	ImGui::InvisibleButton(XORSTR("saturation_value_selector"), SV_PICKER_SIZE);
+	ImGui::InvisibleButton("saturation_value_selector", SV_PICKER_SIZE);
 
 	if (ImGui::IsItemActive() && ImGui::GetIO().MouseDown[0])
 	{
@@ -137,7 +137,7 @@ bool UI::ColorPicker(float* col, bool alphabar)
 
 	// hue bar logic
 	ImGui::SetCursorScreenPos(ImVec2(picker_pos.x + SPACING + SV_PICKER_SIZE.x, picker_pos.y));
-	ImGui::InvisibleButton(XORSTR("hue_selector"), ImVec2(HUE_PICKER_WIDTH, SV_PICKER_SIZE.y));
+	ImGui::InvisibleButton("hue_selector", ImVec2(HUE_PICKER_WIDTH, SV_PICKER_SIZE.y));
 
 	if (ImGui::GetIO().MouseDown[0] && (ImGui::IsItemHovered() || ImGui::IsItemActive()))
 	{
@@ -155,7 +155,7 @@ bool UI::ColorPicker(float* col, bool alphabar)
 	if (alphabar)
 	{
 		ImGui::SetCursorScreenPos(ImVec2(picker_pos.x + SPACING * 2 + HUE_PICKER_WIDTH + SV_PICKER_SIZE.x, picker_pos.y));
-		ImGui::InvisibleButton(XORSTR("alpha_selector"), ImVec2(HUE_PICKER_WIDTH, SV_PICKER_SIZE.y));
+		ImGui::InvisibleButton("alpha_selector", ImVec2(HUE_PICKER_WIDTH, SV_PICKER_SIZE.y));
 
 		if (ImGui::GetIO().MouseDown[0] && (ImGui::IsItemHovered() || ImGui::IsItemActive()))
 		{
@@ -225,11 +225,9 @@ void UI::SetupColors()
 	ImVec4 menubarColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w - 0.8f);
 	ImVec4 frameBgColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w + .1f);
 	ImVec4 tooltipBgColor = ImVec4(Settings::UI::bodyColor.Color().Value.x, Settings::UI::bodyColor.Color().Value.y, Settings::UI::bodyColor.Color().Value.z, Settings::UI::bodyColor.Color().Value.w + .05f);
-	ImVec4 accentColorHovered	= ImVec4(Settings::UI::accentColor.Color().Value.x + 0.1f, Settings::UI::accentColor.Color().Value.y + 0.1f, Settings::UI::accentColor.Color().Value.z + 0.1f, Settings::UI::accentColor.Color().Value.w);
-	ImVec4 accentColorActive = ImVec4(Settings::UI::accentColor.Color().Value.x + 0.2f, Settings::UI::accentColor.Color().Value.y + 0.2f, Settings::UI::accentColor.Color().Value.z + 0.2f, Settings::UI::accentColor.Color().Value.w);
 
 	style.Alpha = 1.0f;
-	style.WindowPadding = ImVec2(4, 4);
+	style.WindowPadding = ImVec2(8, 8);
 	style.WindowMinSize = ImVec2(32, 32);
 	style.WindowRounding = 0.0f;
 	style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
@@ -238,7 +236,7 @@ void UI::SetupColors()
 	style.FrameRounding = 0.0f;
 	style.ItemSpacing = ImVec2(8, 4);
 	style.ItemInnerSpacing = ImVec2(4, 4);
-	style.TouchExtraPadding = ImVec2(0, 2);
+	style.TouchExtraPadding = ImVec2(0, 0);
 	style.IndentSpacing = 21.0f;
 	style.ColumnsMinSpacing = 3.0f;
 	style.ScrollbarSize = 12.0f;
@@ -267,25 +265,25 @@ void UI::SetupColors()
 	style.Colors[ImGuiCol_TitleBgActive] = Settings::UI::mainColor.Color();
 	style.Colors[ImGuiCol_MenuBarBg] = menubarColor;
 	style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(frameBgColor.x + .05f, frameBgColor.y + .05f, frameBgColor.z + .05f, frameBgColor.w);
-	style.Colors[ImGuiCol_ScrollbarGrab] = Settings::UI::accentColor.Color();
-	style.Colors[ImGuiCol_ScrollbarGrabHovered] = accentColorHovered;
-	style.Colors[ImGuiCol_ScrollbarGrabActive] = accentColorActive;
+	style.Colors[ImGuiCol_ScrollbarGrab] = Settings::UI::mainColor.Color();
+	style.Colors[ImGuiCol_ScrollbarGrabHovered] = mainColorHovered;
+	style.Colors[ImGuiCol_ScrollbarGrabActive] = mainColorActive;
 	style.Colors[ImGuiCol_ComboBg] = frameBgColor;
-	style.Colors[ImGuiCol_CheckMark]  = Settings::UI::accentColor.Color();
-	style.Colors[ImGuiCol_SliderGrab] = accentColorHovered;
-	style.Colors[ImGuiCol_SliderGrabActive] = accentColorActive;
-	style.Colors[ImGuiCol_Button] = Settings::UI::accentColor.Color();
-	style.Colors[ImGuiCol_ButtonHovered] = accentColorHovered;
-	style.Colors[ImGuiCol_ButtonActive] = accentColorActive;
-	style.Colors[ImGuiCol_Header] = Settings::UI::accentColor.Color();
-	style.Colors[ImGuiCol_HeaderHovered] = accentColorHovered;
-	style.Colors[ImGuiCol_HeaderActive] = accentColorActive;
+	style.Colors[ImGuiCol_CheckMark]  = Settings::UI::mainColor.Color();
+	style.Colors[ImGuiCol_SliderGrab] = mainColorHovered;
+	style.Colors[ImGuiCol_SliderGrabActive] = mainColorActive;
+	style.Colors[ImGuiCol_Button] = Settings::UI::mainColor.Color();
+	style.Colors[ImGuiCol_ButtonHovered] = mainColorHovered;
+	style.Colors[ImGuiCol_ButtonActive] = mainColorActive;
+	style.Colors[ImGuiCol_Header] = Settings::UI::mainColor.Color();
+	style.Colors[ImGuiCol_HeaderHovered] = mainColorHovered;
+	style.Colors[ImGuiCol_HeaderActive] = mainColorActive;
 	style.Colors[ImGuiCol_Column] = Settings::UI::mainColor.Color();
 	style.Colors[ImGuiCol_ColumnHovered] = mainColorHovered;
 	style.Colors[ImGuiCol_ColumnActive] = mainColorActive;
-	style.Colors[ImGuiCol_ResizeGrip] = Settings::UI::accentColor.Color();
-	style.Colors[ImGuiCol_ResizeGripHovered] = accentColorHovered;
-	style.Colors[ImGuiCol_ResizeGripActive] = accentColorActive;
+	style.Colors[ImGuiCol_ResizeGrip] = Settings::UI::mainColor.Color();
+	style.Colors[ImGuiCol_ResizeGripHovered] = mainColorHovered;
+	style.Colors[ImGuiCol_ResizeGripActive] = mainColorActive;
 	style.Colors[ImGuiCol_CloseButton] = Settings::UI::mainColor.Color();
 	style.Colors[ImGuiCol_CloseButtonHovered] = mainColorHovered;
 	style.Colors[ImGuiCol_CloseButtonActive] = mainColorActive;

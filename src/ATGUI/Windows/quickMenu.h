@@ -2,10 +2,11 @@
 
 #include "../atgui.h"
 
-namespace Main
+namespace QuickMenu
 {
 	extern bool showWindow;
-	extern int page;
+	extern ImVec2 windowPos;
+	extern ImVec2 windowSize;
 
 	extern void RenderWindow();
 }

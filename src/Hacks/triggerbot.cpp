@@ -17,6 +17,8 @@ int Settings::Triggerbot::RandomDelay::lowBound = 20;
 int Settings::Triggerbot::RandomDelay::highBound = 35;
 int Settings::Triggerbot::RandomDelay::lastRoll = 0;
 ButtonCode_t Settings::Triggerbot::key = ButtonCode_t::KEY_LALT;
+bool Settings::Triggerbot::Inaccuracy::enabled = false;
+float Settings::Triggerbot::Inaccuracy::minInaccuracy = 0.5f;
 
 void Triggerbot::CreateMove(CUserCmd *cmd)
 {
@@ -133,6 +135,8 @@ void Triggerbot::CreateMove(CUserCmd *cmd)
 		return;
 
 	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+	if (Settings::Triggerbot::Inaccuracy::enabled && activeWeapon->GetSpread() + activeWeapon->GetInaccuracy() > Settings::Triggerbot::Inaccuracy::minInaccuracy)
+		return;
 	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
 

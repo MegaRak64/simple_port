@@ -1,11 +1,8 @@
-#pragma once
-
-#include <climits>
-#include "../settings.h"
 #include "../SDK/SDK.h"
 #include "../interfaces.h"
+#include "../settings.h"
 
-namespace Autoblock
+namespace Teleport
 {
 	void CreateMove(CUserCmd* cmd);
 }
