@@ -164,4 +164,4 @@ Special thanks to [@aixxe](http://www.github.com/aixxe/) ([aixxe.net](http://www
 
 This project was also originally based upon Atex's [Linux Basehook](http://unknowncheats.me/forum/counterstrike-global-offensive/181878-linux-basehook.html).
 
-Перевели: [@MegaRak64] (http://www.github.com/MegaRak64/) [@NonStop] (http://www.github.com/NonStopez/)
+Перевели: <a href="http://www.github.com/MegaRak64/">@MegaRak64</a>  <a href="http://www.github.com/NonStopez/">@NonStop</a> 
